@@ -1,7 +1,9 @@
 package com.example.demo.aop;
 
+import com.example.demo.MyAnnotation.MyAnnotationDemo;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import org.slf4j.Logger;
@@ -29,6 +31,10 @@ public class AopLog {
     @Before(" aopWebLog()")//上文定义的切入点
     public void doBefore(JoinPoint jp)
     {
+        //新增获取注解信息
+        MethodSignature signature = (MethodSignature) jp.getSignature();
+        MyAnnotationDemo annotation = signature.getMethod().getAnnotation(MyAnnotationDemo.class);
+        logger.info("获取到的参数:"+annotation.value());
         startTime.set(System.currentTimeMillis());//收到请求,记录时间
         //记录请求内容
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
